@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101426">
+  <title>JS Quest — тест по JavaScript</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101426;
+      --card: #1a2038;
+      --text: #f4f5ff;
+      --muted: #aeb8d5;
+      --accent: #c5ff69;
+      --purple: #ad9cff;
+      --green: #73efb3;
+      --red: #ff9ca9;
+      --border: #35405c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(ellipse at 10% 0%, #40316b66, transparent 50%),
+        radial-gradient(ellipse at 100% 70%, #174b5166, transparent 45%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    button { font: inherit; }
+    button:not(:disabled) { cursor: pointer; }
+    button { touch-action: manipulation; }
+    button:focus-visible, summary:focus-visible {
+      outline: 3px solid var(--purple);
+      outline-offset: 5px;
+    }
+    [hidden] { display: none !important; }
+
+    .container {
+      width: min(900px, 100% - 36px);
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 30px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 850;
+    }
+
+    .logo {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      color: var(--bg);
+      background: var(--accent);
+      border-radius: 14px;
+      transform: rotate(-6deg);
+      font-weight: 900;
+    }
+
+    .record {
+      padding: 10px 14px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      font-size: 14px;
+    }
+
+    .record strong { color: var(--accent); }
+
+    main { padding: 25px 0 45px; }
+
+    .card {
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, #202641ee, #171d32ee);
+      border-radius: 28px;
+      padding: clamp(22px, 5vw, 44px);
+      box-shadow: 0 25px 80px #0003;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(38px, 7vw, 65px);
+      line-height: 1.08;
+      letter-spacing: -2px;
+      margin: 22px 0;
+    }
+
+    h1 span { color: var(--accent); }
+
+    .lead {
+      max-width: 580px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .features, .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 30px 0;
+    }
+
+    .tile {
+      padding: 18px;
+      border: 1px solid var(--border);
+      background: #ffffff04;
+      border-radius: 18px;
+    }
+
+    .tile strong {
+      display: block;
+      font-size: 25px;
+      margin-bottom: 5px;
+    }
+
+    .tile span { font-size: 13px; color: var(--muted); }
+
+    .primary, .secondary {
+      min-height: 50px;
+      border-radius: 14px;
+      padding: 13px 23px;
+      font-weight: 800;
+      border: 1px solid transparent;
+      transition: transform .15s, background .15s;
+    }
+
+    .primary { background: var(--accent); color: #18220c; }
+    .primary:hover { background: #d5ff94; transform: translateY(-2px); }
+    .secondary {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .secondary:hover { background: #ffffff0c; }
+    .primary:disabled { cursor: default; opacity: .4; transform: none; }
+
+    .note { color: var(--muted); font-size: 13px; line-height: 1.6; }
+
+    .quiz-top, .question-meta, .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .quiz-top { margin-bottom: 15px; }
+    .quiz-top strong { color: var(--accent); }
+
+    .progress {
+      height: 8px;
+      overflow: hidden;
+      background: #ffffff0c;
+      border-radius: 20px;
+      margin-bottom: 28px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--purple), var(--accent));
+      border-radius: inherit;
+      transition: width .3s;
+    }
+
+    .tag {
+      padding: 7px 11px;
+      border-radius: 9px;
+      background: #ad9cff18;
+      color: #d3caff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .streak { font-size: 13px; color: var(--muted); }
+
+    h2 {
+      font-size: clamp(23px, 4vw, 31px);
+      line-height: 1.4;
+      letter-spacing: -.5px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 24px 0;
+    }
+
+    .options { display: grid; gap: 12px; }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      min-height: 64px;
+      padding: 15px;
+      color: var(--text);
+      text-align: left;
+      background: #ffffff04;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      transition: border-color .15s, background .15s;
+    }
+
+    .option:hover:not(:disabled) {
+      border-color: var(--purple);
+      background: #ad9cff12;
+    }
+
+    .letter {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: #ffffff0c;
+      border-radius: 9px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .answer-text {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .option.correct {
+      border-color: var(--green);
+      background: #73efb314;
+    }
+
+    .option.wrong {
+      border-color: var(--red);
+      background: #ff9ca914;
+    }
+
+    .feedback {
+      margin-top: 20px;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #00000015;
+      line-height: 1.6;
+    }
+
+    .feedback p { margin: 8px 0 0; color: var(--muted); }
+    .actions { margin-top: 25px; flex-wrap: wrap; }
+
+    .result-heading { text-align: center; }
+    .result-icon { font-size: 60px; margin-bottom: 15px; }
+    .result-heading h2 { margin: 12px 0; }
+
+    .result-score {
+      color: var(--accent);
+      font-size: clamp(55px, 12vw, 90px);
+      font-weight: 900;
+      letter-spacing: -4px;
+      margin: 20px 0 0;
+    }
+
+    details {
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+
+    summary { cursor: pointer; font-weight: 750; }
+
+    .review-item {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .review-item strong { white-space: pre-wrap; }
+    .review-item p { margin: 8px 0 0; color: var(--muted); }
+    .review-item .right { color: var(--green); }
+    .review-item .incorrect { color: var(--red); }
+
+    footer {
+      text-align: center;
+      padding: 0 0 30px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    footer strong { color: var(--text); }
+
+    @media (max-width: 540px) {
+      header { padding: 20px 0; }
+      .brand { font-size: 17px; gap: 8px; }
+      .record { font-size: 12px; padding: 9px 10px; }
+      main { padding-top: 10px; }
+      .features, .stats { gap: 8px; }
+      .tile { padding: 14px 10px; }
+      .tile strong { font-size: 21px; }
+      .tile span { font-size: 11px; }
+      .actions .primary { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <span class="logo" aria-hidden="true">JS</span>
+        JS Quest
+      </div>
+      <div class="record">Рекорд: <strong id="best">0</strong> / 200</div>
+    </header>
+
+    <main>
+      <section id="start-screen" class="card">
+        <span class="eyebrow">Прокачай свои знания</span>
+        <h1>Насколько хорошо<br>ты знаешь <span>JavaScript?</span></h1>
+        <p class="lead">
+          Пройди 20 вопросов: от переменных до асинхронности.
+          Собирай баллы, держи серию правильных ответов
+          и узнай свой уровень.
+        </p>
+
+        <div class="features">
+          <div class="tile"><strong>20</strong><span>вопросов</span></div>
+          <div class="tile"><strong>+10</strong><span>за верный ответ</span></div>
+          <div class="tile"><strong>∞</strong><span>попыток</span></div>
+        </div>
+
+        <button class="primary" id="start-button">Начать испытание →</button>
+        <p class="note">
+          Без ограничения времени. После каждого ответа — объяснение.
+          Рекорд сохраняется в этом браузере, если доступно локальное хранилище.
+        </p>
+      </section>
+
+      <section id="quiz-screen" class="card" hidden aria-label="Тест">
+        <div class="quiz-top">
+          <span id="counter"></span>
+          <strong><span id="score">0</span> баллов</strong>
+        </div>
+
+        <div class="progress" id="progress"
+             role="progressbar" aria-label="Отвечено вопросов"
+             aria-valuemin="0" aria-valuemax="20" aria-valuenow="0">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <div class="question-meta">
+          <span class="tag" id="category"></span>
+          <span class="streak" id="streak">Серия: 0</span>
+        </div>
+
+        <h2 id="question" tabindex="-1"></h2>
+        <div class="options" id="options" role="group"
+             aria-labelledby="question"></div>
+
+        <div id="feedback" class="feedback" role="status"
+             aria-live="polite" aria-atomic="true"></div>
+
+        <div class="actions">
+          <span class="note">Выбери один вариант ответа</span>
+          <button class="primary" id="next-button" disabled>Далее →</button>
+        </div>
+      </section>
+
+      <section id="result-screen" class="card" hidden>
+        <div class="result-heading">
+          <div class="result-icon" id="result-icon" aria-hidden="true"></div>
+          <span class="eyebrow">Испытание завершено</span>
+          <h2 id="result-title" tabindex="-1"></h2>
+          <p class="lead" id="result-description"
+             style="margin: 0 auto;"></p>
+          <div class="result-score" id="final-score"></div>
+          <div class="note">из 200 баллов</div>
+          <p id="record-message" class="note"></p>
+        </div>
+
+        <div class="stats">
+          <div class="tile"><strong id="correct-total"></strong><span>верных ответов</span></div>
+          <div class="tile"><strong id="accuracy"></strong><span>точность</span></div>
+          <div class="tile"><strong id="max-streak"></strong><span>лучшая серия</span></div>
+        </div>
+
+        <button class="primary" id="retry-button">Попробовать ещё раз ↻</button>
+
+        <details id="review-details">
+          <summary>Разбор всех ответов</summary>
+          <div id="review"></div>
+        </details>
+      </section>
+    </main>
+
+    <footer>
+      Создал <strong>Русинов Давид, 11А класс</strong><br>
+      JS Quest · Учись. Практикуйся. Развивайся.
+    </footer>
+  </div>
+
+  <script>
+    "use strict";
+
+    // correct — индекс правильного ответа, начиная с нуля.
+    const questions = [
+      {
+        topic: "Переменные",
+        text: "Какое объявление позволяет изменять значение переменной?",
+        answers: ["const score = 0", "let score = 0", "fixed score = 0", "static score = 0"],
+        correct: 1,
+        explanation: "Переменной, объявленной через let, можно присвоить новое значение. const запрещает повторное присваивание."
+      },
+      {
+        topic: "Типы данных",
+        text: 'Что вернёт typeof "JavaScript"?',
+        answers: ['"text"', '"String"', '"string"', '"object"'],
+        correct: 2,
+        explanation: "Оператор typeof возвращает строку с названием типа. Для строк это \"string\"."
+      },
+      {
+        topic: "Сравнение",
+        text: "Какой оператор сравнивает значения без приведения типов?",
+        answers: ["=", "==", "!=", "==="],
+        correct: 3,
+        explanation: "Строгое равенство === не приводит операнды к другому типу. Например, 5 === \"5\" даст false."
+      },
+      {
+        topic: "Массивы",
+        text: "Как добавить элемент в конец массива?",
+        answers: ["push()", "pop()", "shift()", "slice()"],
+        correct: 0,
+        explanation: "push() добавляет элементы в конец массива и возвращает его новую длину."
+      },
+      {
+        topic: "Преобразование типов",
+        text: 'Чему равно выражение "5" + 2?',
+        answers: ["7", '"52"', "NaN", "Возникнет ошибка"],
+        correct: 1,
+        explanation: "Если один из операндов + является строкой, после преобразования к примитивам выполняется конкатенация: получается строка \"52\"."
+      },
+      {
+        topic: "Числа",
+        text: "Как проверить, является ли значение именно числовым NaN?",
+        answers: ["value === NaN", 'typeof value === "NaN"', "Number.isNaN(value)", "value === undefined"],
+        correct: 2,
+        explanation: "Number.isNaN() проверяет NaN без преобразования типов. NaN не равен самому себе, поэтому сравнение через === не подходит."
+      },
+      {
+        topic: "Массивы",
+        text: "С какого индекса начинается массив в JavaScript?",
+        answers: ["1", "-1", "С любого", "0"],
+        correct: 3,
+        explanation: "Первый элемент массива имеет индекс 0, второй — 1 и так далее."
+      },
+      {
+        topic: "Функции",
+        text: "Как выглядит корректная стрелочная функция?",
+        answers: ["const sum = (a, b) => a + b;", "const sum => (a, b) = a + b;", "function => sum(a, b);", "sum(a, b) -> a + b;"],
+        correct: 0,
+        explanation: "Стрелочная функция использует =>. Если после стрелки указано выражение без фигурных скобок, его результат возвращается автоматически."
+      },
+      {
+        topic: "DOM",
+        text: 'Что делает document.querySelector(".card")?',
+        answers: ["Находит все элементы .card", "Находит первый элемент .card", "Создаёт элемент .card", "Удаляет элементы .card"],
+        correct: 1,
+        explanation: "querySelector() возвращает первый элемент, соответствующий CSS-селектору, или null, если совпадений нет."
+      },
+      {
+        topic: "События",
+        text: "Как добавить обработчик нажатия на кнопку?",
+        answers: ['button.addEvent("click", handler)', 'button.on("click") = handler', 'button.addEventListener("click", handler)', "button.click = event(handler)"],
+        correct: 2,
+        explanation: "addEventListener() принимает название события и функцию, которая будет вызвана при его возникновении."
+      },
+      {
+        topic: "JSON",
+        text: "Как преобразовать JSON-строку в JavaScript-значение?",
+        answers: ["JSON.stringify()", "JSON.object()", "JSON.convert()", "JSON.parse()"],
+        correct: 3,
+        explanation: "JSON.parse() разбирает JSON-строку. Обратное преобразование в JSON-строку выполняет JSON.stringify()."
+      },
+      {
+        topic: "Массивы",
+        text: "Что возвращает метод map()?",
+        answers: ["Новый массив результатов", "Только первый элемент", "Длину исходного массива", "Всегда undefined"],
+        correct: 0,
+        explanation: "map() создаёт новый массив из результатов вызова функции для элементов исходного массива."
+      },
+      {
+        topic: "Условия",
+        text: "Какое из значений является falsy?",
+        answers: ['"0"', "[]", "0", "{}"],
+        correct: 2,
+        explanation: "Число 0 преобразуется в false. Непустая строка \"0\", массивы и обычные объекты преобразуются в true."
+      },
+      {
+        topic: "Циклы",
+        text: "Какой цикл перебирает значения элементов массива?",
+        answers: ["for...in", "for...of", "for...keys", "repeat...until"],
+        correct: 1,
+        explanation: "for...of перебирает значения итерируемого объекта. for...in перебирает имена перечисляемых свойств."
+      },
+      {
+        topic: "Особенности языка",
+        text: "Что вернёт typeof null?",
+        answers: ['"null"', '"undefined"', '"boolean"', '"object"'],
+        correct: 3,
+        explanation: "typeof null возвращает \"object\" — это историческая особенность JavaScript. Для проверки null используй value === null."
+      },
+      {
+        topic: "Область видимости",
+        text: "Где доступна переменная let, объявленная внутри блока { }?",
+        answers: ["Внутри этого блока, включая вложенные области", "Везде на странице", "Только в следующей строке", "Только за пределами блока"],
+        correct: 0,
+        explanation: "let имеет блочную область видимости. За пределами блока такая переменная недоступна."
+      },
+      {
+        topic: "Асинхронность",
+        text: "Что возвращает вызов async-функции?",
+        answers: ["Всегда строку", "Promise", "Всегда undefined", "Только число"],
+        correct: 1,
+        explanation: "Вызов async-функции всегда возвращает Promise, даже если внутри возвращается обычное значение."
+      },
+      {
+        topic: "Массивы",
+        text: "Какой результат даст [1, 2, 3, 4].filter(n => n > 2)?",
+        answers: ["[1, 2]", "[true, true]", "[3, 4]", "4"],
+        correct: 2,
+        explanation: "filter() создаёт новый массив из элементов, для которых функция проверки вернула истинное значение."
+      },
+      {
+        topic: "Объекты",
+        text: 'Как получить свойство name объекта user?',
+        answers: ['user("name")', "user->name", "user::name", "user.name"],
+        correct: 3,
+        explanation: "К свойству можно обратиться через точку: user.name, либо через квадратные скобки: user[\"name\"]."
+      },
+      {
+        topic: "Порядок выполнения",
+        text: 'В каком порядке выведутся числа?\n\nconsole.log(1);\nsetTimeout(() => console.log(2), 0);\nconsole.log(3);',
+        answers: ["1, 3, 2", "1, 2, 3", "2, 1, 3", "3, 2, 1"],
+        correct: 0,
+        explanation: "Синхронный код сначала выведет 1 и 3. Обработчик таймера выполнится позже, когда стек вызовов освободится."
+      }
+    ];
+
+    const $ = id => document.getElementById(id);
+    const STORAGE_KEY = "js-quest-best-v1";
+
+    let best = 0;
+    try {
+      const saved = Number(localStorage.getItem(STORAGE_KEY));
+      if (Number.isInteger(saved) && saved >= 0 && saved <= 200) {
+        best = saved;
+      }
+    } catch {
+      // Тест работает и при недоступном localStorage.
+    }
+
+    $("best").textContent = best;
+
+    let order = [];
+    let position = 0;
+    let score = 0;
+    let streak = 0;
+    let maxStreak = 0;
+    let answered = false;
+    let history = [];
+
+    function showScreen(id) {
+      for (const name of ["start-screen", "quiz-screen", "result-screen"]) {
+        $(name).hidden = name !== id;
+      }
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function updateProgress(count) {
+      $("progress-fill").style.width = `${count / questions.length * 100}%`;
+      $("progress").setAttribute("aria-valuenow", String(count));
+    }
+
+    function startQuiz() {
+      order = shuffle(questions);
+      position = 0;
+      score = 0;
+      streak = 0;
+      maxStreak = 0;
+      history = [];
+      showScreen("quiz-screen");
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      answered = false;
+      const q = order[position];
+
+      $("counter").textContent = `Вопрос ${position + 1} из ${order.length}`;
+      $("score").textContent = score;
+      $("category").textContent = q.topic;
+      $("streak").textContent = `Серия: ${streak}`;
+      $("question").textContent = q.text;
+      $("options").replaceChildren();
+      $("feedback").replaceChildren();
+      $("feedback").style.display = "none";
+      $("next-button").disabled = true;
+      $("next-button").textContent =
+        position === order.length - 1 ? "Узнать результат →" : "Далее →";
+
+      updateProgress(position);
+
+      q.answers.forEach((answer, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option";
+
+        const letter = document.createElement("span");
+        letter.className = "letter";
+        letter.textContent = String.fromCharCode(65 + index);
+        letter.setAttribute("aria-hidden", "true");
+
+        const text = document.createElement("span");
+        text.className = "answer-text";
+        text.textContent = answer;
+
+        button.append(letter, text);
+        button.addEventListener("click", () => selectAnswer(index));
+        $("options").append(button);
+      });
+
+      $("question").focus();
+    }
+
+    function selectAnswer(index) {
+      if (answered) return;
+      answered = true;
+
+      const q = order[position];
+      const isCorrect = index === q.correct;
+
+      if (isCorrect) {
+        score += 10;
+        streak++;
+        maxStreak = Math.max(maxStreak, streak);
+      } else {
+        streak = 0;
+      }
+
+      history.push({ question: q, selected: index, isCorrect });
+
+      [...$("options").children].forEach((button, i) => {
+        button.disabled = true;
+
+        if (i === q.correct) {
+          button.classList.add("correct");
+          button.setAttribute("aria-label", `${q.answers[i]}. Правильный ответ`);
+          button.querySelector(".letter").textContent = "✓";
+        } else if (i === index) {
+          button.classList.add("wrong");
+          button.setAttribute("aria-label", `${q.answers[i]}. Неправильный ответ`);
+          button.querySelector(".letter").textContent = "✕";
+        }
+      });
+
+      const title = document.createElement("strong");
+      title.textContent = isCorrect ? "✓ Верно! +10 баллов" : "✕ Неверно. Запоминаем!";
+      title.style.color = isCorrect ? "var(--green)" : "var(--red)";
+
+      const explanation = document.createElement("p");
+      explanation.textContent = q.explanation;
+
+      $("feedback").style.display = "block";
+      $("feedback").replaceChildren(title, explanation);
+      $("score").textContent = score;
+      $("streak").textContent = `Серия: ${streak}${streak >= 3 ? " 🔥" : ""}`;
+      updateProgress(position + 1);
+
+      $("next-button").disabled = false;
+      $("next-button").focus();
+    }
+
+    function showResults() {
+      showScreen("result-screen");
+
+      const correct = history.filter(item => item.isCorrect).length;
+      const percent = Math.round(correct / questions.length * 100);
+      const isNewRecord = score > best;
+
+      if (isNewRecord) {
+        best = score;
+        try {
+          localStorage.setItem(STORAGE_KEY, String(best));
+        } catch {
+          // Рекорд остаётся доступен до перезагрузки страницы.
+        }
+      }
+
+      $("best").textContent = best;
+      $("final-score").textContent = score;
+      $("correct-total").textContent = `${correct} / ${questions.length}`;
+      $("accuracy").textContent = `${percent}%`;
+      $("max-streak").textContent = maxStreak;
+      $("record-message").textContent = isNewRecord
+        ? "🏆 Новый рекорд!"
+        : `Твой рекорд: ${best} из 200 баллов`;
+
+      let title, description, icon;
+
+      if (percent === 100) {
+        title = "JavaScript-мастер!";
+        description = "Без единой ошибки. Отличное знание основ!";
+        icon = "🏆";
+      } else if (percent >= 75) {
+        title = "Уверенный разработчик";
+        description = "Хороший результат! Разбор ответов поможет закрепить знания.";
+        icon = "🚀";
+      } else if (percent >= 50) {
+        title = "Хорошая база";
+        description = "Основы уже знакомы. Повтори сложные темы и попробуй снова.";
+        icon = "⚡";
+      } else {
+        title = "Начало положено";
+        description = "Каждая ошибка — подсказка, что изучить дальше. Всё получится!";
+        icon = "🌱";
+      }
+
+      $("result-title").textContent = title;
+      $("result-description").textContent = description;
+      $("result-icon").textContent = icon;
+      $("review-details").open = false;
+      $("review").replaceChildren();
+
+      history.forEach((item, index) => {
+        const q = item.question;
+        const block = document.createElement("article");
+        block.className = "review-item";
+
+        const heading = document.createElement("strong");
+        heading.textContent = `${item.isCorrect ? "✓" : "✕"} ${index + 1}. ${q.text}`;
+
+        const chosen = document.createElement("p");
+        chosen.className = item.isCorrect ? "right" : "incorrect";
+        chosen.textContent = `Твой ответ: ${q.answers[item.selected]}`;
+
+        block.append(heading, chosen);
+
+        if (!item.isCorrect) {
+          const right = document.createElement("p");
+          right.className = "right";
+          right.textContent = `Правильный ответ: ${q.answers[q.correct]}`;
+          block.append(right);
+        }
+
+        const explanation = document.createElement("p");
+        explanation.textContent = q.explanation;
+        block.append(explanation);
+
+        $("review").append(block);
+      });
+
+      $("result-title").focus();
+    }
+
+    $("start-button").addEventListener("click", startQuiz);
+    $("retry-button").addEventListener("click", startQuiz);
+
+    $("next-button").addEventListener("click", () => {
+      if (!answered) return;
+
+      if (position < order.length - 1) {
+        position++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    });
+  </script>
+</body>
+</html>
